@@ -41,6 +41,7 @@ function ConfigContent({ config, setConfig }){
     // Manejo del cambio de tiempo
     const handleTimeChange = (name) => (value) => {
         setEstadoDia(name);
+        
         //Transformación del tiempo a valor entero
         const formattedValue = new Date(value * 1000).toISOString().substr(11, 8);
         const startTime1 = localConfig.startTime1 ? parseInt(localConfig.startTime1.replace(/:/g, ''), 10) : 0;
@@ -68,72 +69,72 @@ function ConfigContent({ config, setConfig }){
   
     //Manejo del handle al momento de actualizar información
     const updateRestriccion = (event) => {
-      event.preventDefault();
-      setConfig(localConfig);
-      navigate("/");
+        event.preventDefault();
+        setConfig(localConfig);
+        navigate("/");
     };
 
     return(
         <Row className="justify-content-center mt-2">
-                <Col sm={8}>
-                    <Form onSubmit={updateRestriccion}>
-                        {/*Sección del día */}
-                        <h3><Form.Label>Día</Form.Label></h3>
-                        <Row className="mb-3" style={{border:'1px solid black',paddingBottom:'1rem', paddingTop:'1rem'}}>
-                            {Object.keys(localConfig.days).map(day => (
-                                <Form.Group key={day} controlId={`form${day}`}>
-                                    <Row>
-                                        <Col>
-                                            <Form.Label className="label">{day}:</Form.Label>
-                                        </Col>
-                                        <Col>
-                                            <Form.Control className="text-center text_input" type="text" value={Array.isArray(localConfig.days[day]) ? localConfig.days[day].join(', ') : localConfig.days[day]} onChange={(e) => cambiarNumeroPlaca(e, day)} onBlur={() => handleBlur(day)}/>
-                                        </Col>
-                                    </Row>
-                                </Form.Group>    
-                            ))}
-                        </Row>
+            <Col sm={8}>
+                <Form onSubmit={updateRestriccion}>
+                    {/*Sección del día */}
+                    <h3><Form.Label>Día</Form.Label></h3>
+                    <Row className="mb-3" style={{border:'1px solid black',paddingBottom:'1rem', paddingTop:'1rem'}}>
+                        {Object.keys(localConfig.days).map(day => (
+                            <Form.Group key={day} controlId={`form${day}`}>
+                                <Row>
+                                    <Col>
+                                        <Form.Label className="label">{day}:</Form.Label>
+                                    </Col>
+                                    <Col>
+                                        <Form.Control className="text-center text_input" type="text" value={Array.isArray(localConfig.days[day]) ? localConfig.days[day].join(', ') : localConfig.days[day]} onChange={(e) => cambiarNumeroPlaca(e, day)} onBlur={() => handleBlur(day)}/>
+                                    </Col>
+                                </Row>
+                            </Form.Group>    
+                        ))}
+                    </Row>
                         
-                        {/*Sección de la hora de la mañana */}
-                        <h3><Form.Label>Mañana</Form.Label></h3>
-                        <Row className="mb-3" style={{border:'1px solid black', paddingBottom:'1rem', paddingTop:'1rem'}}>
-                            <Col>
-                                <Form.Group controlId="formStartTime1">
-                                    <Form.Label className="label">Hora de inicio:</Form.Label>
-                                    <TimePicker className="text-center text_input" start="05:00" end="12:00" step={30} format={24} value={localConfig.startTime1} onChange={handleTimeChange('startTime1')}/>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId="formEndTime1">
-                                    <Form.Label className="label">Hora de fin:</Form.Label>
-                                    <TimePicker className="text-center text_input" start="05:00" end="12:00" step={30} format={24} value={localConfig.endTime1} onChange={handleTimeChange('endTime1')}/>
-                                </Form.Group>
-                            </Col>
-                        </Row>
+                    {/*Sección de la hora de la mañana */}
+                    <h3><Form.Label>Mañana</Form.Label></h3>
+                    <Row className="mb-3" style={{border:'1px solid black', paddingBottom:'1rem', paddingTop:'1rem'}}>
+                        <Col>
+                            <Form.Group controlId="formStartTime1">
+                                <Form.Label className="label">Hora de inicio:</Form.Label>
+                                <TimePicker className="text-center text_input" start="05:00" end="12:00" step={30} format={24} value={localConfig.startTime1} onChange={handleTimeChange('startTime1')}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group controlId="formEndTime1">
+                                <Form.Label className="label">Hora de fin:</Form.Label>
+                                <TimePicker className="text-center text_input" start="05:00" end="12:00" step={30} format={24} value={localConfig.endTime1} onChange={handleTimeChange('endTime1')}/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                        {error && (estadoDia === 'startTime1' || estadoDia === 'endTime1') && <p style={{ color: 'red' }}>{error}</p>}
+                    {error && (estadoDia === 'startTime1' || estadoDia === 'endTime1') && <p style={{ color: 'red' }}>{error}</p>}
                         
-                        {/*Sección de la hora de la tarde */}
-                        <h3><Form.Label>Tarde</Form.Label></h3>
-                        <Row className="mb-3" style={{border:'1px solid black',paddingBottom:'1rem', paddingTop:'1rem'}}>
-                            <Col>
-                                <Form.Group controlId="formStartTime2">
-                                    <Form.Label className="label">Hora de inicio:</Form.Label>
-                                    <TimePicker className="text-center text_input" start="12:00" end="24:00" step={30} format={24} value={localConfig.startTime2} onChange={handleTimeChange('startTime2')}/>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId="formEndTime2">
-                                    <Form.Label className="label">Hora de fin:</Form.Label>
-                                    <TimePicker className="text-center text_input" start="12:00" end="24:00" step={30} format={24} value={localConfig.endTime2} onChange={handleTimeChange('endTime2')}/>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        {error && (estadoDia === 'startTime2' || estadoDia === 'endTime2') && <p style={{ color: 'red' }}>{error}</p>}
-                        <Button type="submit" style={{ backgroundColor: '#335BB2', width: '100%' }}>Guardar Configuración</Button>
-                    </Form>
-                </Col>
-            </Row>
+                    {/*Sección de la hora de la tarde */}
+                    <h3><Form.Label>Tarde</Form.Label></h3>
+                    <Row className="mb-3" style={{border:'1px solid black',paddingBottom:'1rem', paddingTop:'1rem'}}>
+                        <Col>
+                            <Form.Group controlId="formStartTime2">
+                                <Form.Label className="label">Hora de inicio:</Form.Label>
+                                <TimePicker className="text-center text_input" start="12:00" end="24:00" step={30} format={24} value={localConfig.startTime2} onChange={handleTimeChange('startTime2')}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group controlId="formEndTime2">
+                                <Form.Label className="label">Hora de fin:</Form.Label>
+                                <TimePicker className="text-center text_input" start="12:00" end="24:00" step={30} format={24} value={localConfig.endTime2} onChange={handleTimeChange('endTime2')}/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    {error && (estadoDia === 'startTime2' || estadoDia === 'endTime2') && <p style={{ color: 'red' }}>{error}</p>}
+                    <Button type="submit" style={{ backgroundColor: '#335BB2', width: '100%' }}>Guardar Configuración</Button>
+                </Form>
+            </Col>
+        </Row>
     );
 }
 

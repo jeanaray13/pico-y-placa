@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Button, Alert, Row, Col } from 'react-bootstrap';
 
 function PlacaContent({ config }){
-    
     // Variables de estado
     const [placa, setPlaca] = useState('');
     const [hora, setHora] = useState(new Date().toLocaleTimeString('en-GB').slice(0, 5));
     const [mensaje, setMensaje] = useState('');
-
-    // Efecto para actualizar la hora en tiempo real
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setHora(new Date().toLocaleTimeString('en-GB').slice(0, 5));
-        }, 1000);
-
-        return () => clearInterval(timer); // Limpia el intervalo cuando el componente se desmonte
-    }, []);
 
     // Manejo del cambio de placa haciendo que esté con mayúsqulas
     const handlePlacaChange = (event) => {
@@ -24,7 +14,6 @@ function PlacaContent({ config }){
         
         //Elimina caracteres no permitidos y agrega un guión
         const formattedValue = subvalue.replace(/[^A-Z0-9]/g, '').replace(/(.{3})/, '$1-'); 
-        
         setPlaca(formattedValue);
     };
 
@@ -49,7 +38,7 @@ function PlacaContent({ config }){
         //Si la consulta es en un día laboral
         if (days[diaActual] && days[diaActual].includes(digito)) {
             //Si la hora se encuentra entre el intervalo configurado previamente
-            if ((hora >= startTime1 && hora <= endTime1) || (hora >= startTime2 && hora <= endTime2)) {
+            if ((hora >= startTime1.slice(0, 5) && hora <= endTime1) || (hora >= startTime2.slice(0, 5) && hora <= endTime2)) {
                 setMensaje('No puede circular.');
             } else {
                 setMensaje('Puede circular.');
@@ -62,27 +51,27 @@ function PlacaContent({ config }){
 
     return(
         <Row className="justify-content-center mt-4">
-                <Col sm={8}>
-                    <Form>
-                        {/*Placa */}
-                        <Form.Group controlId="formPlaca">
-                            <Form.Label className="label">Ingrese la placa de su vehículo:</Form.Label>
-                            <Form.Control className="text-center text_input" type="text" value={placa} onChange={handlePlacaChange} placeholder="MMM-0000" />
-                        </Form.Group>
-                        {/*Hora Actual*/}
-                        <Form.Group controlId="formHora">
-                            <Form.Label className="label">Hora:</Form.Label>
-                            <br></br>
-                            <div className="text-center">
-                                <Form.Label className="text-center text_horainput" >{hora}</Form.Label>
-                            </div> 
-                        </Form.Group>
+            <Col sm={8}>
+                <Form>
+                    {/*Placa */}
+                    <Form.Group controlId="formPlaca">
+                        <Form.Label className="label">Ingrese la placa de su vehículo:</Form.Label>
+                        <Form.Control className="text-center text_input" type="text" value={placa} onChange={handlePlacaChange} placeholder="MMM-0000" />
+                    </Form.Group>
+                    {/*Hora Actual*/}
+                    <Form.Group controlId="formHora">
+                        <Form.Label className="label">Hora:</Form.Label>
+                        <br></br>
+                        <div className="text-center">
+                            <Form.Control className="text-center text_horainput" type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
+                        </div> 
+                    </Form.Group>
 
-                        {mensaje && <Alert style={{textAlign:'center'}} variant={mensaje === 'Puede circular.' ? 'success' : 'danger'} className="mt-3">{mensaje}</Alert>}
-                        <Button style={{ backgroundColor: '#335BB2', width: '100%' }} onClick={validarPlaca}>Verificar</Button>
-                    </Form>
-                </Col>
-            </Row>
+                    {mensaje && <Alert style={{textAlign:'center'}} variant={mensaje === 'Puede circular.' ? 'success' : 'danger'} className="mt-3">{mensaje}</Alert>}
+                    <Button style={{ backgroundColor: '#335BB2', width: '100%' }} onClick={validarPlaca}>Verificar</Button>
+                </Form>
+            </Col>
+        </Row>
     );
 }
 
